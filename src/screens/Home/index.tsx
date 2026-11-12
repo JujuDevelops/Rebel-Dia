@@ -1,10 +1,10 @@
 import Icon from "@/components/Icon";
 import Timeline from "@/components/timeline/Timeline";
-import { Chip, Txt } from "@/components/ui";
+import { Chip, StrokeTxt, Txt } from "@/components/ui";
 import { useSwipe } from "@/hooks/useSwipe";
 import useWeather from "@/hooks/useWeather";
 import { useApp } from "@/store/RotinaProvider";
-import { useTheme, useThemeSet } from "@/theme";
+import { P5_RED, useTheme, useThemeSet } from "@/theme";
 import { MN, PER, WDL, WDN, cap, dk, fromKey, pocc, vis } from "@/utils/rotina";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
@@ -87,7 +87,8 @@ export default function Home() {
   const A = useApp(),
     c = useTheme(),
     wx = useWeather(),
-    sv = useRef<ScrollView>(null);
+    sv = useRef<ScrollView>(null),
+    p5 = useThemeSet() === "persona5"; // no Persona 5 o cartão "Caminhos do dia" é vermelho
   const [open, setOpen] = useState(true);
   const pos = useRef({ y: -1, n: -1, done: false });
   useEffect(() => {
@@ -249,7 +250,7 @@ export default function Home() {
         </Animated.View>
         <View
           style={{
-            backgroundColor: c.card,
+            backgroundColor: p5 ? P5_RED : c.card,
             borderRadius: 20,
             padding: 16,
             paddingVertical: 12,
@@ -261,23 +262,38 @@ export default function Home() {
             style={{ flexDirection: "row", alignItems: "center" }}
           >
             <View style={{ flex: 1 }}>
-              <Txt title style={{ fontWeight: "600" }}>
+              <StrokeTxt
+                title
+                strokeWidth={3}
+                strokeColor="#000"
+                style={p5 ? { fontWeight: "600", color: "#fff" } : { fontWeight: "600" }}
+              >
                 Caminhos do dia
-              </Txt>
+              </StrokeTxt>
               {!!an.length && (
-                <Txt mu style={{ fontSize: 13, marginTop: 2 }}>
+                <Txt
+                  mu
+                  style={[
+                    { fontSize: 13, marginTop: 2 },
+                    p5 && { color: "rgba(255,255,255,0.85)" },
+                  ]}
+                >
                   {an.join(" · ")}
                 </Txt>
               )}
             </View>
-            <Chip label="Editar" onPress={() => A.setPathsOpen(true)} />
+            <Chip
+              label="Editar"
+              onRed={p5}
+              onPress={() => A.setPathsOpen(true)}
+            />
             <View
               style={{
                 marginLeft: 12,
                 transform: [{ rotate: open ? "0deg" : "-90deg" }],
               }}
             >
-              <Icon name="chevron-down" size={22} color={c.mu} />
+              <Icon name="chevron-down" size={22} color={p5 ? "#fff" : c.mu} />
             </View>
           </Pressable>
           {open && (
@@ -298,7 +314,10 @@ export default function Home() {
                   >
                     <Txt
                       mu
-                      style={{ fontSize: 14, width: 52, fontWeight: "600" }}
+                      style={[
+                        { fontSize: 14, width: 52, fontWeight: "600" },
+                        p5 && { color: "rgba(255,255,255,0.85)" },
+                      ]}
                     >
                       {nm}
                     </Txt>
@@ -309,6 +328,7 @@ export default function Home() {
                           key={q.id}
                           label={q.n}
                           on={on}
+                          onRed={p5}
                           onPress={() =>
                             A.upDay(k, (s) => {
                               s.c[pk] = on ? "" : q.id;
@@ -321,7 +341,13 @@ export default function Home() {
                 );
               })}
               {!an.length && !A.PA.length && (
-                <Txt mu style={{ fontSize: 15, marginTop: 8 }}>
+                <Txt
+                  mu
+                  style={[
+                    { fontSize: 15, marginTop: 8 },
+                    p5 && { color: "rgba(255,255,255,0.85)" },
+                  ]}
+                >
                   Nenhum caminho para este dia.
                 </Txt>
               )}

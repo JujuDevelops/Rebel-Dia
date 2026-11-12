@@ -22,3 +22,5 @@ export const useFont = (title?: boolean): TextStyle | undefined => {
     : undefined;
 };
 export const hsl = (h: number, s: number, l: number) => `hsl(${h}, ${s}%, ${l}%)`;
+// vermelho do tema Persona 5 (fundo do cartão "Caminhos do dia", contorno do título do Inbox)
+export const P5_RED = "#C70000";

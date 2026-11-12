@@ -1,7 +1,7 @@
 import Icon from "@/components/Icon";
-import { Check, Txt } from "@/components/ui";
+import { Check, StrokeTxt, Txt } from "@/components/ui";
 import { useApp } from "@/store/RotinaProvider";
-import { useTheme } from "@/theme";
+import { P5_RED, useTheme } from "@/theme";
 import { reorderPending, type Inb } from "@/utils/rotina";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
@@ -76,9 +76,14 @@ export default function Inbox() {
 
   const header = (
     <View style={{ marginBottom: 18 }}>
-      <Txt title style={{ fontSize: 34, fontWeight: "800", letterSpacing: -1 }}>
+      <StrokeTxt
+        title
+        strokeWidth={9}
+        strokeColor={P5_RED}
+        style={{ fontSize: 34, fontWeight: "800", letterSpacing: -1 }}
+      >
         Inbox
-      </Txt>
+      </StrokeTxt>
       <Txt mu style={{ fontSize: 15, marginTop: 2 }}>
         {pend.length
           ? pend.length + (pend.length === 1 ? " tarefa" : " tarefas")
